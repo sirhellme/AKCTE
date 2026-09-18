@@ -16,7 +16,7 @@ print("\nNama kolom: ")
 print(df.columns.tolist())
 
 print("INFORMASI DATA")
-print("=" * 60)
+print("=" * 30)
 print(df.info())
 
 print("\nJumlah NaN setiap kolom:")
