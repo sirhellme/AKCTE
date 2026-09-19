@@ -14,11 +14,11 @@ For a normalized light curve,
 
 where:
 
-- <img width="115" height="67" alt="image" src="https://github.com/user-attachments/assets/38700791-eaf7-42da-90e6-057f8a5089f9" />
+<img width="115" height="67" alt="image" src="https://github.com/user-attachments/assets/38700791-eaf7-42da-90e6-057f8a5089f9" />
  is the stellar flux outside the transit.
-- <img width="115" height="67" alt="image" src="https://github.com/user-attachments/assets/665c81fa-b811-4b56-ba75-6b6fa91105b1" />
+<img width="115" height="67" alt="image" src="https://github.com/user-attachments/assets/665c81fa-b811-4b56-ba75-6b6fa91105b1" />
  is the flux during the transit.
-- <img width="51" height="39" alt="image" src="https://github.com/user-attachments/assets/25a224b8-01a0-4302-be44-b98d226e3194" />
+<img width="51" height="39" alt="image" src="https://github.com/user-attachments/assets/25a224b8-01a0-4302-be44-b98d226e3194" />
  is the transit depth.
 
 The orbital period can then be estimated from the time interval between repeated transit events.
