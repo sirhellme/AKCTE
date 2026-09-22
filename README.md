@@ -6,6 +6,8 @@ The main goal of this project is to process photometric data from the Kepler mis
 
 ## Overview
 
+AKCTE (_Analisis Kurva Cahaya Transit Eksoplanet_) or Analysis Exoplanet Light Curves
+
 Exoplanet transit analysis is based on detecting small decreases in a star's observed brightness when a planet passes in front of its host star.
 
 For a normalized light curve,
