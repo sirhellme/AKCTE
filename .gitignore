@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.so 
+
+.venv/
+venv/
+env/
+
+.ipynb_checkpoints/
+
+tests/
+Backup/
+Main Backup/
+
+../Exoplanet-Analysis/src/__pycache__/

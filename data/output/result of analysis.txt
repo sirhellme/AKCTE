@@ -1,0 +1,6 @@
+Number of Data Points: 483909
+Best Period: 328.234706 days
+Epoch   : 199.221670
+Transit Duration    : 0.420000 days
+Depth of transit : 0.671949 %
+Power BLS         : 0.0083
