@@ -1,18 +1,21 @@
+# Python cache
 __pycache__/
 *.py[cod]
-*.so 
+*.so
 
+# Virtual environments
 .venv/
 venv/
 env/
 
+# Jupyter
 .ipynb_checkpoints/
 
+# Tests (ignore these directories/files only if intended)
 tests/
+test
+test.cpp
+
+# Backup directories
 Backup/
 Main Backup/
-
-./test
-./test.cpp
-
-../Exoplanet-Analysis/src/__pycache__/

@@ -327,8 +327,10 @@ constexpr double CADENCE_DAYS  = 0.0204339;
 
 Run the simulation, press `J` to jump close to a transit, switch to observer view with `V`, take a screenshot and save it as `docs/images/simulation.png`:
 
-```markdown
+
 ![Kepler-553 c transit simulation](images/simulation.png)
+```markdown
+*Figure 4. Inside of the simulation*
 ```
 
 ### Note on scale
