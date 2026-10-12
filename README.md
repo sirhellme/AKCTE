@@ -1,10 +1,38 @@
-# Kepler-553 Light Curve Analysis
+# Kepler-553 c Light Curve Analysis
+
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![C++](https://img.shields.io/badge/C%2B%2B-17-00599C)
+![SFML](https://img.shields.io/badge/SFML-3.x-8CC445)
+![Method](https://img.shields.io/badge/Method-BLS-orange)
+
+Detection and visualization of the long-period transit signal of **Kepler-553 c** from real **NASA Kepler** photometry, using Box-fitting Least Squares (BLS) in Python and an interactive 3D transit simulation in C++ (SFML + OpenGL).
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Target System](#target-system)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Objectives](#objectives)
+7. [Data](#data)
+8. [Data Processing](#data-processing)
+9. [Results](#results)
+10. [Output Files and Examples](#output-files-and-examples)
+11. [C++ Transit Simulation](#c-transit-simulation)
+12. [Limitations](#limitations)
+13. [Troubleshooting](#troubleshooting)
+14. [References](#references)
+
+---
 
 ## Overview
 
-This project analyzes real photometric observations of the **Kepler-553 exoplanet system** using computational methods. The main objective is to process multi-quarter Kepler observations, identify periodic transit signals, estimate the orbital period and transit epoch, construct a phase-folded light curve, and investigate the transit signal associated with **Kepler-553 c**.
+This project analyzes real photometric observations of the **Kepler-553 exoplanet system**. The main objective is to process multi-quarter Kepler observations, identify periodic transit signals, estimate the orbital period and transit epoch, construct a phase-folded light curve, and investigate the transit signal associated with **Kepler-553 c**.
 
-The analysis uses the **Box-fitting Least Squares (BLS)** method to search for periodic transit signals in the observed light curve.
+The analysis uses the **Box-fitting Least Squares (BLS)** method to search for periodic transit signals. The derived parameters are then used as input for a C++ simulation that visualizes the transit.
 
 ---
 
@@ -18,9 +46,36 @@ The Kepler-553 system contains at least two confirmed planets:
 | Planet       | Period (days) | Transit Depth | Transit Duration |
 | ------------ | ------------: | ------------: | ---------------: |
 | Kepler-553 b |         4.030 |        ~0.30% |      ~2.80 hours |
-| Kepler-553 c |       328.240 |        ~1.43% |     ~12.13 hours |
+| Kepler-553 c |       328.240 |        ~0.29% |     ~12.27 hours |
 
-The main focus of this project is **Kepler-553 c**. It is particularly interesting because its orbital period is significantly longer than that of Kepler-553 b, making its transit signal more challenging to detect from the available Kepler observations.
+> **Check before publishing:** the previous version of this table listed ~1.43% depth and ~12.13 hours for Kepler-553 c, which disagrees with the published values used in the [Results](#results) table (0.290830% and 0.51135833 days = 12.27 hours). Verify against the NASA Exoplanet Archive and keep both tables consistent.
+
+The main focus is **Kepler-553 c**. Its orbital period is much longer than that of Kepler-553 b, so only a few transits fall inside the Kepler baseline, which makes the signal harder to detect.
+
+---
+
+## Project Structure
+
+Adjust this tree to match your repository.
+
+```text
+.
+├── main.py                  # main analysis pipeline (BLS)
+├── install.sh               # installation helper
+├── requirements.txt         # Python dependencies
+├── data/                    # Kepler quarter files
+├── output/                  # generated analysis results
+│   ├── processed_light_curve.csv
+│   ├── bls_results.csv
+│   ├── phase_folded_light_curve.csv
+│   ├── transit_parameters.txt
+│   ├── light_curve.png
+│   ├── bls_periodogram.png
+│   └── phase_folded_light_curve.png
+├── simulation/
+│   └── main.cpp             # C++ 3D transit simulation (SFML 3 + OpenGL)
+└── README.md
+```
 
 ---
 
@@ -28,42 +83,63 @@ The main focus of this project is **Kepler-553 c**. It is particularly interesti
 
 ### Requirements
 
-The project requires:
-
 1. Python 3
 2. The Python packages listed in `requirements.txt`
-3. The required data files included in the repository
-4. A compatible C++ compiler for the computational simulation
+3. The Kepler data files (see [Data](#data))
+4. A C++17 compiler, SFML 3, OpenGL and GLU (for the simulation)
 
-Install the required dependencies with:
+### Python
 
 ```bash
 pip install -r requirements.txt
 ```
 
-The repository also provides an installation script:
+or use the installation script:
 
 ```bash
 bash install.sh
 ```
 
+Using a virtual environment is recommended:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### C++ simulation (Arch Linux)
+
+```bash
+sudo pacman -S sfml glu ttf-dejavu pkgconf
+```
+
+On other distributions, install the equivalent SFML 3, GLU and DejaVu font packages. SFML 3 is required (the code uses the SFML 3 API).
+
 ---
 
 ## Usage
 
-After installing the required dependencies, the main analysis can be executed with:
+### 1. Run the analysis
 
 ```bash
 python3 main.py
 ```
 
-The project also contains supporting scripts for data preparation and analysis.
+All results are written to `output/`.
+
+### 2. Build and run the simulation
+
+```bash
+cd simulation
+g++ -std=c++17 main.cpp -o kepler \
+    $(pkg-config --cflags --libs sfml-graphics sfml-window sfml-system gl glu)
+./kepler
+```
 
 ---
 
 ## Objectives
-
-The main objectives of this project are:
 
 * Download and process photometric observations of the Kepler-553 system.
 * Combine observations from multiple Kepler quarters.
@@ -85,13 +161,9 @@ The main objectives of this project are:
 
 ## Data
 
-The observational data are obtained from the **NASA Kepler Mission**. The project uses Kepler photometric observations associated with the Kepler-553 system.
-
-The data can be obtained from the **NASA Exoplanet Archive** and the relevant Kepler data archives.
+The observational data come from the **NASA Kepler Mission** and can be obtained from the **NASA Exoplanet Archive** and the relevant Kepler data archives (MAST).
 
 ### Parameters
-
-The main transit parameters analyzed in this project are:
 
 * **Orbital Period (`P`)**
 * **Transit Epoch (`t0`)**
@@ -99,11 +171,11 @@ The main transit parameters analyzed in this project are:
 * **Transit Depth**
 * **BLS Power**
 
+Times are in **BKJD** (Barycentric Kepler Julian Date, BJD − 2454833).
+
 ---
 
 ## Data Processing
-
-The data-processing workflow is:
 
 ```text
 Multiple Kepler Quarter Files
@@ -139,56 +211,33 @@ $$
 t_n = t_0 + nP
 $$
 
-where:
-
-* $t_n$ is the time of the $n$-th transit,
-* $t_0$ is the reference transit epoch,
-* $P$ is the orbital period,
-* $n$ is an integer representing the transit number.
+where $t_n$ is the time of the $n$-th transit, $t_0$ is the reference transit epoch, $P$ is the orbital period, and $n$ is an integer transit number.
 
 The phase-folded light curve is calculated using:
 
 $$
-\phi =
-\left(
-\frac{t-t_0}{P}
-\right)
-\bmod 1
+\phi = \left( \frac{t - t_0}{P} \right) \bmod 1
 $$
 
-where:
-
-* $\phi$ is the orbital phase,
-* $t$ is the observation time,
-* $t_0$ is the reference transit epoch,
-* $P$ is the orbital period.
+where $\phi$ is the orbital phase and $t$ is the observation time.
 
 ### Parameter Comparison
 
-To compare the parameters obtained from the analysis with published values, the absolute difference is defined as:
+The absolute difference between an analysis value and a published value is:
 
 $$
 \Delta X = X_{\mathrm{analysis}} - X_{\mathrm{published}}
 $$
 
-The relative percentage difference is calculated as:
+The relative percentage difference is:
 
 $$
-\Delta X_{\%}
-=
-\frac{
-\left|X_{\mathrm{analysis}}-X_{\mathrm{published}}\right|
-}{
-\left|X_{\mathrm{published}}\right|
-}
-\times 100\%
+\Delta X_{\%} = \frac{\left|X_{\mathrm{analysis}} - X_{\mathrm{published}}\right|}{\left|X_{\mathrm{published}}\right|} \times 100\%
 $$
 
 ---
 
 ## Results
-
-The following table summarizes the transit parameters obtained from the analysis and their comparison with published values.
 
 | Parameter            |   Derived Value |    Published Uncertainty | Published Value |  Difference |
 | -------------------- | --------------: | -----------------------: | --------------: | ----------: |
@@ -199,98 +248,175 @@ The following table summarizes the transit parameters obtained from the analysis
 
 ### Interpretation
 
-The derived orbital period is very close to the published value, with a relative difference of approximately **0.001665%**. The estimated transit epoch also shows a small difference of approximately **0.009184%**.
+The derived orbital period is very close to the published value (about **0.001665%** relative difference), and the transit epoch also agrees well (about **0.009184%**).
 
-However, the derived transit duration and transit depth show substantially larger differences from the published values. These differences may be influenced by the BLS model, detrending procedure, transit sampling, and the treatment of the observed light curve.
-
-Therefore, the derived parameters should be interpreted as **results of the computational analysis**, rather than as replacements for the published planetary parameters.
+The derived transit duration and depth differ substantially from the published values. Possible contributors include the simple box model used by BLS, the detrending procedure, the sparse sampling of a long-period transit, and the treatment of the light curve. The derived parameters should therefore be read as **results of this computational analysis**, not as replacements for the published planetary parameters.
 
 ---
 
-## Computational Simulation
+## Output Files and Examples
 
-The derived transit parameters are subsequently used as input for a computational simulation implemented in **C++**.
+After running `python3 main.py`, the following files are written to `output/`.
 
-The simulation is intended to provide a visual representation of the detected transit signal and its relationship to the derived orbital parameters.
+| File                           | Description                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------- |
+| `processed_light_curve.csv`    | Cleaned, normalized and detrended light-curve data used for the transit analysis.            |
+| `bls_results.csv`              | BLS period search results: tested periods and the corresponding BLS power.                   |
+| `phase_folded_light_curve.csv` | Light curve folded with the derived period and epoch.                                        |
+| `transit_parameters.txt`       | Derived period, epoch, duration, depth and BLS power.                                        |
+| `light_curve.png`              | Plot of the processed light curve.                                                           |
+| `bls_periodogram.png`          | BLS periodogram showing the detected signal.                                                 |
+| `phase_folded_light_curve.png` | Phase-folded light curve showing the transit.                                                |
 
-The main simulation parameters are:
+### Example: embedding the plots
+
+Copy the generated figures into a folder tracked by git (for example `docs/images/`) and reference them with relative paths so they render on GitHub:
+
+```bash
+mkdir -p docs/images
+cp output/*.png docs/images/
+```
+
+Then add to this README:
+
+```markdown
+### Processed light curve
+![Processed light curve](docs/images/light_curve.png)
+
+### BLS periodogram
+![BLS periodogram](docs/images/bls_periodogram.png)
+
+### Phase-folded light curve
+![Phase-folded light curve](docs/images/phase_folded_light_curve.png)
+```
+
+Add a caption under each figure so readers know what to look for, for example:
+
+```markdown
+*Figure 1. BLS periodogram. The highest peak is at P = 328.2347 days.*
+```
+
+### Example: `transit_parameters.txt`
+
+Show the real content of your file in a code block. With the values from this analysis it looks like this (replace the BLS power with your own value):
+
+```text
+Orbital Period     : 328.234706 days
+Transit Epoch      : 199.221670 BKJD
+Transit Duration   : 0.42 days
+Transit Depth      : 0.67194886 %
+BLS Power          : <your value>
+```
+
+### Example: previewing a CSV
+
+Generate a Markdown table from a real output file and paste it into the README:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("output/bls_results.csv")
+print(df.head(5).to_markdown(index=False))
+```
+
+```bash
+pip install tabulate   # required by DataFrame.to_markdown()
+```
+
+Do the same for `processed_light_curve.csv` and `phase_folded_light_curve.csv`. For large files, show only the first rows and describe the columns instead of pasting the whole file.
+
+### Example: reading the parameters in Python
+
+```python
+import pandas as pd
+
+lc = pd.read_csv("output/processed_light_curve.csv")
+print(lc.describe())
+```
+
+---
+
+## C++ Transit Simulation
+
+The simulation (`simulation/main.cpp`) renders the star, the planetary orbit, the planet position, the transit event, the simulated light curve and the derived BLS parameters. It is a **visualization** of the derived transit model and does not replace the observational analysis.
+
+### Parameters used
 
 ```text
 Orbital Period     : 328.234706 days
 Transit Epoch      : 199.221670 BKJD
 Transit Duration   : 0.42 days
 Transit Depth      : 0.67194886%
+Cadence            : 0.0204339 days
 ```
 
-The simulation is not intended to replace the observational analysis. Instead, it provides a computational visualization of the transit model derived from the BLS analysis.
+These are defined at the top of `main.cpp`:
+
+```cpp
+constexpr double PERIOD_DAYS   = 328.234706;
+constexpr double EPOCH_BKJD    = 199.22167045006876;
+constexpr double DURATION_DAYS = 0.42;
+constexpr double DEPTH_PERCENT = 0.6719488595745792;
+constexpr double CADENCE_DAYS  = 0.0204339;
+```
+
+> If your source still uses `328.23470`, update it to `328.234706` so the simulation matches the analysis exactly.
+
+### Controls
+
+| Key / Input  | Action                                      |
+| ------------ | ------------------------------------------- |
+| `SPACE`      | Play / pause                                |
+| `R`          | Reset to half a period before the transit   |
+| `UP` / `DOWN`| Double / halve the simulation speed (days/s)|
+| `V`          | Switch between orbit and observer view      |
+| `S`          | Toggle automatic slow motion near transit   |
+| `J`          | Jump to 2.5 days before the next transit    |
+| Mouse drag   | Rotate the camera (orbit view)              |
+| Mouse wheel  | Zoom                                        |
+| `ESC`        | Quit                                        |
+
+### Example: adding a screenshot
+
+Run the simulation, press `J` to jump close to a transit, switch to observer view with `V`, take a screenshot and save it as `docs/images/simulation.png`:
+
+```markdown
+![Kepler-553 c transit simulation](docs/images/simulation.png)
+```
+
+### Note on scale
+
+The sizes of the star, planet and orbit in the 3D view are chosen for readability and are **not to scale**. As a result, the planet visually overlaps the star for far longer than the 0.42-day transit shown in the light curve. The flux curve and transit timing follow the derived parameters; the 3D geometry is illustrative.
 
 ---
 
-## Output Files
+## Limitations
 
-The analysis produces several output files containing the processed light curve, transit-search results, and derived parameters.
+* The BLS box model does not account for limb darkening or ingress/egress shape.
+* Only a few transits of a 328-day planet fall inside the Kepler baseline, so duration and depth are poorly constrained.
+* Detrending can partially suppress or distort long-duration transits.
+* The derived depth and duration differ significantly from published values (see [Results](#results)).
 
-### Generated Files
+---
 
-| File                           | Description                                                                                                                         |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `processed_light_curve.csv`    | Cleaned, normalized, and detrended light-curve data used for the transit analysis.                                                  |
-| `bls_results.csv`              | Results from the Box-fitting Least Squares (BLS) period search, including the tested periods and corresponding BLS power.           |
-| `phase_folded_light_curve.csv` | Light-curve data folded using the derived orbital period and transit epoch.                                                         |
-| `transit_parameters.txt`       | Summary of the derived transit parameters, including orbital period, transit epoch, transit duration, transit depth, and BLS power. |
-| `light_curve.png`              | Plot of the processed photometric light curve.                                                                                      |
-| `bls_periodogram.png`          | BLS periodogram showing the detected periodic transit signal.                                                                       |
-| `phase_folded_light_curve.png` | Phase-folded light curve showing the detected transit signal.                                                                       |
+## Troubleshooting
 
-### C++ Simulation Output
-
-The C++ simulation provides a graphical representation of the detected transit model using the parameters obtained from the BLS analysis.
-
-The simulation uses:
-
-```text
-Orbital Period     : 328.234706 days
-Transit Epoch      : 199.221670 BKJD
-Transit Duration   : 0.42 days
-Transit Depth      : 0.67194886%
-```
-
-The simulation displays:
-
-* The host star and planetary orbit.
-* The position of the planet during its orbit.
-* The transit event.
-* The simulated light curve.
-* The derived BLS parameters.
-
-The C++ simulation is intended as a visualization of the computational results and does not replace the observational light-curve analysis.
-
-### Output Directory
-
-The generated analysis results are stored in the project's output directory:
-
-```text
-output/
-├── processed_light_curve.csv
-├── bls_results.csv
-├── phase_folded_light_curve.csv
-├── transit_parameters.txt
-├── light_curve.png
-├── bls_periodogram.png
-└── phase_folded_light_curve.png
-```
-
-The exact files generated may depend on the analysis configuration and scripts used.
+| Problem | Likely cause and fix |
+| ------- | -------------------- |
+| Simulation window opens and closes immediately | Run `./kepler` in a terminal and read the message. A missing font is the most common cause: `sudo pacman -S ttf-dejavu`. |
+| `Failed to open X11 display` | SFML 3 runs through XWayland. Check `echo $DISPLAY`. On niri, install `xwayland-satellite`. Hyprland provides XWayland by default. |
+| Window fails to be created | In `main.cpp`, set `settings.antiAliasingLevel = 0;`. |
+| `cannot find -lGLU` | Install GLU: `sudo pacman -S glu`. |
+| Black screen with UI only | Make sure `renderScene(...)` is called every frame before `drawUI(...)`. |
 
 ---
 
 ## References
-[^1] Agol, E., Luger, R. and Foreman-Mackey, D. (2020) 'Analytic Planetary Transit Light Curves and Derivatives for Stars with Polynomial Limb Darkening'. *The Astronomical Journal*. doi:10.3847/1538-3881/ab4fee.
 
-[^2] Aigrain, S., Parviainen, H. and Pope, B. (2016) 'K2SC: Flexible systematics correction and detrending of K2 light curves using Gaussian Process regression'. *Monthly Notices of the Royal Astronomical Society*. doi:10.1093/mnras/stw706.
+[^1]: Agol, E., Luger, R. and Foreman-Mackey, D. (2020) 'Analytic Planetary Transit Light Curves and Derivatives for Stars with Polynomial Limb Darkening'. *The Astronomical Journal*. doi:10.3847/1538-3881/ab4fee.
 
-[^3] Aigrain, S. *et al.* (2016) 'Robust, open-source removal of systematics in Kepler data'. *Monthly Notices of the Royal Astronomical Society*, 000, pp. 1–12.
+[^2]: Aigrain, S., Parviainen, H. and Pope, B. (2016) 'K2SC: Flexible systematics correction and detrending of K2 light curves using Gaussian Process regression'. *Monthly Notices of the Royal Astronomical Society*. doi:10.1093/mnras/stw706.
 
-[^4] Berger, T. A. *et al.* (2020) 'The Gaia-Kepler Stellar Properties Catalog. I. Homogeneous Fundamental Properties for 186,301 Kepler Stars'. *The Astronomical Journal*, 159(6), 280. doi:10.3847/1538-3881/ab4fee.
+[^3]: Aigrain, S. *et al.* (2016) 'Robust, open-source removal of systematics in Kepler data'. *Monthly Notices of the Royal Astronomical Society*, 000, pp. 1–12.
 
-[^5] Christiansen, J. L. *et al.* (2020) 'Measuring Transit Signal Recovery in the Kepler Pipeline. IV. Completeness of the DR25 Planet Candidate Catalog'. *The Astrophysical Journal*, 908, 86. doi:10.3847/1538-3881/abab0b.
+[^4]: Berger, T. A. *et al.* (2020) 'The Gaia-Kepler Stellar Properties Catalog. I. Homogeneous Fundamental Properties for 186,301 Kepler Stars'. *The Astronomical Journal*, 159(6), 280. doi:10.3847/1538-3881/ab4fee.
