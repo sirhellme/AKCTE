@@ -533,5 +533,5 @@ int main() {
 
 // how to run the code
 //
-// g++ main.cpp -o main $(pkg-config --cflag --libs sfml-graphics sfml-window sfml-system)
-// ./main 
+//g++ main2D.cpp -o main $(pkg-config --cflag --libs sfml-graphics sfml-window sfml-system)
+//./main 
