@@ -229,7 +229,7 @@ $$
 The relative percentage difference is:
 
 $$
-\Delta X_{\%} = \frac{\left|X_{\mathrm{analysis}} - X_{\mathrm{published}}\right|}{\left|X_{\mathrm{published}}\right|} \times 100\%
+\Delta X = \frac{|X_{\text{analysis}} - X_{\text{published}}|}{|X_{\text{published}}|} \times 100\%
 $$
 
 ---
@@ -261,9 +261,8 @@ After running `python3 main.py`, the following files are written to `output/`.
 | `light curve analysis.png`     | Raw light curve, Processed light curve, Periodogram BLS, Folded Curve                        |
 | `result of analysis.txt`       | The result of the data after processed.                                                      |
 
-### Plots
+## Plots
 
-```markdown
 ### Processed light curve
 ![Processed light curve](images/light_curve.png)
 ```markdown
