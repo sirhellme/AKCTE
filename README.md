@@ -129,9 +129,9 @@ All results are written to `output/`.
 
 ```bash
 cd simulation
-g++ -std=c++17 main.cpp -o kepler \
+g++ -std=c++17 main3D.cpp -o kepler3d \
     $(pkg-config --cflags --libs sfml-graphics sfml-window sfml-system gl glu)
-./kepler
+./kepler3d
 ```
 
 ---
