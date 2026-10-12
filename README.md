@@ -281,13 +281,13 @@ Then add to this README:
 
 ```markdown
 ### Processed light curve
-![Processed light curve](docs/images/light_curve.png)
+![Processed light curve](./images/light_curve.png)
 
 ### BLS periodogram
-![BLS periodogram](docs/images/bls_periodogram.png)
+![BLS periodogram](./images/periodogram.png)
 
 ### Phase-folded light curve
-![Phase-folded light curve](docs/images/phase_folded_light_curve.png)
+![Phase-folded light curve](./images/phase-folded.png)
 ```
 
 Add a caption under each figure so readers know what to look for, for example:
