@@ -1,4 +1,6 @@
 Number of Data Points: 483909
+Cadencec: 0.0204339 days
+Cadence: 29.42 minutes
 Best Period: 328.234706 days
 Epoch   : 199.221670
 Transit Duration    : 0.420000 days

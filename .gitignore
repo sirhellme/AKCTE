@@ -12,4 +12,7 @@ tests/
 Backup/
 Main Backup/
 
+./test
+./test.cpp
+
 ../Exoplanet-Analysis/src/__pycache__/

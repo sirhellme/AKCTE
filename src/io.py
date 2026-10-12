@@ -102,3 +102,27 @@ def clean_outliers(time, flux, n_sigma=5):
         time = time[mask]
         flux = flux[mask]
     return time, flux
+
+def calculate_cadence(time):
+    time = np.asarray(time, dtype=float)
+    time = time[np.isfinite(time)]
+
+    # Sort and remove duplicate timestamps
+    time = np.unique(np.sort(time))
+
+    # Difference between observations
+    dt = np.diff(time)
+
+    # Remove invalid and very large gaps
+    dt = dt[(dt > 0) & (dt < 0.1)]
+
+    # Kepler long-cadence is approximately 29.4 minutes
+    # 29.4 minutes = ~0.0204 days
+    normal_dt = dt[(dt > 0.015) & (dt < 0.025)]
+
+    if len(normal_dt) == 0:
+        raise ValueError("Kepler cadence interval not found.")
+
+    cadence = np.median(normal_dt)
+
+    return cadence

@@ -1,0 +1,5 @@
+Parameter,Analysis Value,Analysis Uncertainty,Published Value,Published Uncertainty,Difference (%)
+Orbital Period (days),328.23470578,nan,328.24017000,+0.00039/-0.0004,0.001665
+Transit Epoch (BKJD),199.22167045,nan,199.20337500,0.000858,0.009184
+Transit Duration (days),0.42000000,nan,0.51135833,0.0027958333333333338,17.865815
+Transit Depth (%),0.67194886,5.207778011306965,0.29083000,0.00148,131.045236

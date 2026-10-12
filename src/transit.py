@@ -4,7 +4,7 @@ from astropy.timeseries import BoxLeastSquares
 def find_period(time, flux, min_period=300, max_period=360, n_period=6000):
     model = BoxLeastSquares(time, flux)
     period_grid = np.linspace(min_period, max_period, n_period)
-    duration_grid = np.linspace(0.20, 0.80, 25)
+    duration_grid = np.linspace(0.30, 0.60, 301)
     result = model.power(period_grid, duration_grid)
     i = np.argmax(result.power)
 
@@ -13,6 +13,7 @@ def find_period(time, flux, min_period=300, max_period=360, n_period=6000):
         'duration' : result.duration[i],
         't0' : result.transit_time[i],
         'depth' : result.depth[i],
+        'depth_err': result.depth_err[i],
         'power' : result.power[i],
         'period_grid' : result.period,
         'power_grid' : result.power,
