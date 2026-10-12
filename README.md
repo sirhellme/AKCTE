@@ -56,25 +56,24 @@ The main focus is **Kepler-553 c**. Its orbital period is much longer than that 
 
 ## Project Structure
 
-Adjust this tree to match your repository.
-
 ```text
-.
-├── main.py                  # main analysis pipeline (BLS)
-├── install.sh               # installation helper
-├── requirements.txt         # Python dependencies
-├── data/                    # Kepler quarter files
-├── output/                  # generated analysis results
-│   ├── processed_light_curve.csv
-│   ├── bls_results.csv
-│   ├── phase_folded_light_curve.csv
-│   ├── transit_parameters.txt
-│   ├── light_curve.png
-│   ├── bls_periodogram.png
-│   └── phase_folded_light_curve.png
+.         
+├── data/
+│   ├── metadata/
+│   └── raw/
+├── images/                    
+├── output/                  
+│   ├── comparison parameter.csv
+│   ├── light curve analysis.png
+│   └── result of analysis.txt
 ├── simulation/
-│   └── main.cpp             # C++ 3D transit simulation (SFML 3 + OpenGL)
-└── README.md
+│   ├── kepler             
+│   ├── main2D.cpp
+│   └── mian3D.cpp
+├── install.sh                  
+├── main.py               
+├── README.md
+└── requirements.txt
 ```
 
 ---
@@ -93,8 +92,6 @@ Adjust this tree to match your repository.
 ```bash
 pip install -r requirements.txt
 ```
-
-or use the installation script:
 
 ```bash
 bash install.sh
@@ -237,7 +234,7 @@ $$
 
 ---
 
-## Results
+## Results of Kepler-553 c
 
 | Parameter            |   Derived Value |    Published Uncertainty | Published Value |  Difference |
 | -------------------- | --------------: | -----------------------: | --------------: | ----------: |
@@ -260,78 +257,29 @@ After running `python3 main.py`, the following files are written to `output/`.
 
 | File                           | Description                                                                                  |
 | ------------------------------ | -------------------------------------------------------------------------------------------- |
-| `processed_light_curve.csv`    | Cleaned, normalized and detrended light-curve data used for the transit analysis.            |
-| `bls_results.csv`              | BLS period search results: tested periods and the corresponding BLS power.                   |
-| `phase_folded_light_curve.csv` | Light curve folded with the derived period and epoch.                                        |
-| `transit_parameters.txt`       | Derived period, epoch, duration, depth and BLS power.                                        |
-| `light_curve.png`              | Plot of the processed light curve.                                                           |
-| `bls_periodogram.png`          | BLS periodogram showing the detected signal.                                                 |
-| `phase_folded_light_curve.png` | Phase-folded light curve showing the transit.                                                |
+| `comparison parameter.csv`     | Compare analytic data with real or published data                                            |
+| `light curve analysis.png`     | Raw light curve, Processed light curve, Periodogram BLS, Folded Curve                        |
+| `result of analysis.txt`       | The result of the data after processed.                                                      |
 
-### Example: embedding the plots
-
-Copy the generated figures into a folder tracked by git (for example `docs/images/`) and reference them with relative paths so they render on GitHub:
-
-```bash
-mkdir -p docs/images
-cp output/*.png docs/images/
-```
-
-Then add to this README:
+### Plots
 
 ```markdown
 ### Processed light curve
-![Processed light curve](./images/light_curve.png)
+![Processed light curve](images/light_curve.png)
+```markdown
+*Figure 1. Processed light curve*
+```
 
 ### BLS periodogram
-![BLS periodogram](./images/periodogram.png)
+![BLS periodogram](images/periodogram.png)
+```markdown
+*Figure 2. BLS periodogram. The highest peak is at P = 328.2347 days.*
+```
 
 ### Phase-folded light curve
-![Phase-folded light curve](./images/phase-folded.png)
-```
-
-Add a caption under each figure so readers know what to look for, for example:
-
+![Phase-folded light curve](images/phase-folded.png)
 ```markdown
-*Figure 1. BLS periodogram. The highest peak is at P = 328.2347 days.*
-```
-
-### Example: `transit_parameters.txt`
-
-Show the real content of your file in a code block. With the values from this analysis it looks like this (replace the BLS power with your own value):
-
-```text
-Orbital Period     : 328.234706 days
-Transit Epoch      : 199.221670 BKJD
-Transit Duration   : 0.42 days
-Transit Depth      : 0.67194886 %
-BLS Power          : <your value>
-```
-
-### Example: previewing a CSV
-
-Generate a Markdown table from a real output file and paste it into the README:
-
-```python
-import pandas as pd
-
-df = pd.read_csv("output/bls_results.csv")
-print(df.head(5).to_markdown(index=False))
-```
-
-```bash
-pip install tabulate   # required by DataFrame.to_markdown()
-```
-
-Do the same for `processed_light_curve.csv` and `phase_folded_light_curve.csv`. For large files, show only the first rows and describe the columns instead of pasting the whole file.
-
-### Example: reading the parameters in Python
-
-```python
-import pandas as pd
-
-lc = pd.read_csv("output/processed_light_curve.csv")
-print(lc.describe())
+*Figure 3. Phase-Folded light curve*
 ```
 
 ---
@@ -381,7 +329,7 @@ constexpr double CADENCE_DAYS  = 0.0204339;
 Run the simulation, press `J` to jump close to a transit, switch to observer view with `V`, take a screenshot and save it as `docs/images/simulation.png`:
 
 ```markdown
-![Kepler-553 c transit simulation](docs/images/simulation.png)
+![Kepler-553 c transit simulation](images/simulation.png)
 ```
 
 ### Note on scale
@@ -413,10 +361,10 @@ The sizes of the star, planet and orbit in the 3D view are chosen for readabilit
 
 ## References
 
-[^1]: Agol, E., Luger, R. and Foreman-Mackey, D. (2020) 'Analytic Planetary Transit Light Curves and Derivatives for Stars with Polynomial Limb Darkening'. *The Astronomical Journal*. doi:10.3847/1538-3881/ab4fee.
+[^1] Agol, E., Luger, R. and Foreman-Mackey, D. (2020) 'Analytic Planetary Transit Light Curves and Derivatives for Stars with Polynomial Limb Darkening'. *The Astronomical Journal*. doi:10.3847/1538-3881/ab4fee.
 
-[^2]: Aigrain, S., Parviainen, H. and Pope, B. (2016) 'K2SC: Flexible systematics correction and detrending of K2 light curves using Gaussian Process regression'. *Monthly Notices of the Royal Astronomical Society*. doi:10.1093/mnras/stw706.
+[^2] Aigrain, S., Parviainen, H. and Pope, B. (2016) 'K2SC: Flexible systematics correction and detrending of K2 light curves using Gaussian Process regression'. *Monthly Notices of the Royal Astronomical Society*. doi:10.1093/mnras/stw706.
 
-[^3]: Aigrain, S. *et al.* (2016) 'Robust, open-source removal of systematics in Kepler data'. *Monthly Notices of the Royal Astronomical Society*, 000, pp. 1–12.
+[^3] Aigrain, S. *et al.* (2016) 'Robust, open-source removal of systematics in Kepler data'. *Monthly Notices of the Royal Astronomical Society*, 000, pp. 1–12.
 
-[^4]: Berger, T. A. *et al.* (2020) 'The Gaia-Kepler Stellar Properties Catalog. I. Homogeneous Fundamental Properties for 186,301 Kepler Stars'. *The Astronomical Journal*, 159(6), 280. doi:10.3847/1538-3881/ab4fee.
+[^4] Berger, T. A. *et al.* (2020) 'The Gaia-Kepler Stellar Properties Catalog. I. Homogeneous Fundamental Properties for 186,301 Kepler Stars'. *The Astronomical Journal*, 159(6), 280. doi:10.3847/1538-3881/ab4fee.
